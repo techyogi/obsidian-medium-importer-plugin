@@ -57,8 +57,8 @@ export default class MediumImporterSettingsTab extends PluginSettingTab {
                     .setIcon("checkmark")
                     .setTooltip("Save Path")
                     .onClick(async () => {
-                        if (apiInput == null) return;
-                        this.plugin.settings.savePath = savePath.getValue();
+                        if (savePath == null) return;
+                        this.plugin.settings.saveMediumPath = savePath.getValue();
                         savePath.setValue("");
                         await this.plugin.saveSettings();
                         new Notice("Path set successfully");

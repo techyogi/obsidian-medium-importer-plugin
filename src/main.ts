@@ -4,7 +4,7 @@ import MediumImporterSettingsTab from "./settings";
 
 interface MediumImporterSettings {
     rapidAPIKey?: string;
-    savePath?: string;
+    saveMediumPath?: string;
 }
 
 export default class MediumImporterPlugin extends Plugin {

@@ -38,7 +38,7 @@ export default class ImportMediumArticleModal extends Modal {
 
     async getArticleMarkdownFromId(
         id: string,
-        apiKey: string,
+        apiKey: string
     ): Promise<string | undefined> {
         const url = `https://medium2.p.rapidapi.com/article/${id}/markdown`;
 
@@ -91,7 +91,7 @@ export default class ImportMediumArticleModal extends Modal {
                     );
                     return;
                 }
-                if (!this.plugin.settings.savePath) {
+                if (!this.plugin.settings.saveMediumPath) {
                     new Notice(
                         "[Medium Importer] Please set savePath from root",
                     );
@@ -108,8 +108,7 @@ export default class ImportMediumArticleModal extends Modal {
 
                 const markdown = await this.getArticleMarkdownFromId(
                     id,
-                    this.plugin.settings.rapidAPIKey,
-                    this.plugin.settings.savePath,
+                    this.plugin.settings.rapidAPIKey
                 );
                 console.log(markdown);
                 if (!markdown) {
