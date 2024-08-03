@@ -36,16 +36,26 @@ var ImportMediumArticleModal = class extends import_obsidian.Modal {
     super(plugin.app);
     this.plugin = plugin;
   }
-  async createNewNote(title, content) {
+  async createNewNote(title, content, savePath) {
     const { vault, workspace } = this.plugin.app;
     let fileName = title;
     fileName = fileName.replace(/\*/g, "").replace(/"/g, "").replace(/\\/g, "").replace(/\//g, "").replace(/</g, "").replace(/>/g, "").replace(/:/g, " -").replace(/\|/g, "").replace(/\?/g, "");
     new import_obsidian.Notice(`Creating note with title: ${fileName}`);
     try {
-      const file = await vault.create(
-        (0, import_obsidian.normalizePath)(`${fileName}.md`),
-        content
-      );
+      let file = null;
+      console.log("savePath:" + savePath);
+      console.log("fullpath:" + (0, import_obsidian.normalizePath)(`${savePath}/${fileName}.md`));
+      if (savePath != null) {
+        file = await vault.create(
+          (0, import_obsidian.normalizePath)(`${savePath}/${fileName}.md`),
+          content
+        );
+      } else {
+        file = await vault.create(
+          (0, import_obsidian.normalizePath)(`${fileName}.md`),
+          content
+        );
+      }
       const leaf = workspace.getLeaf(true);
       await leaf.openFile(file);
     } catch (error) {
@@ -118,7 +128,7 @@ var ImportMediumArticleModal = class extends import_obsidian.Modal {
         }
         const title = markdown.split("#")[1].split("\n")[0];
         const content = markdown;
-        await this.createNewNote(title, content);
+        await this.createNewNote(title, content, this.plugin.settings.saveMediumPath);
       } catch (error) {
         new import_obsidian.Notice(`[Medium Importer] Unexpected Error: ${error}`);
       }

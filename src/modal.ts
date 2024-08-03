@@ -9,7 +9,7 @@ export default class ImportMediumArticleModal extends Modal {
         this.plugin = plugin;
     }
 
-    async createNewNote(title: string, content: string) {
+    async createNewNote(title: string, content: string, savePath: string) {
         const { vault, workspace } = this.plugin.app;
 
         let fileName = title;
@@ -25,10 +25,20 @@ export default class ImportMediumArticleModal extends Modal {
             .replace(/\?/g, "");
         new Notice(`Creating note with title: ${fileName}`);
         try {
-            const file = await vault.create(
-                normalizePath(`${fileName}.md`),
-                content,
-            );
+            let file = null 
+            console.log("savePath:"+savePath);
+            console.log("fullpath:"+normalizePath(`${savePath}/${fileName}.md`))
+            if (savePath != null) {
+				file = await vault.create(
+					normalizePath(`${savePath}/${fileName}.md`),
+					content,
+				);
+			} else {
+				file = await vault.create(
+					normalizePath(`${fileName}.md`),
+					content,
+				);
+			}
             const leaf = workspace.getLeaf(true);
             await leaf.openFile(file);
         } catch (error) {
@@ -117,7 +127,7 @@ export default class ImportMediumArticleModal extends Modal {
 
                 const title = markdown.split("#")[1].split("\n")[0];
                 const content = markdown;
-                await this.createNewNote(title, content);
+                await this.createNewNote(title, content, this.plugin.settings.saveMediumPath);
             } catch (error) {
                 new Notice(`[Medium Importer] Unexpected Error: ${error}`);
             }
